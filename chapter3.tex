@@ -13,13 +13,13 @@ $A_{ij}(t) \in \R^{n_i \times n_j}, \ B_{ij}(t) \in \R^{n_i \times r_j},\ t \in 
 $x_i = x_i(t) \in \R^{n_i}$ --- состояние $i$-ой математической модели; $u_i = u_i(t) \in U_i = \{u \in \R^{r_i} : u_{i*} \leq u \leq u_i^* \}$ --- дискретное управляющие воздействие $i$-ой математической модели c периодом квантования $h$ ($u_{i*}, u_i^* \in \R^{r_i}$ --- заданные векторы). Будем также считать, что $n = \sum_{i \in I_i} n_i, \ r = \sum_{i \in I_i} r_i.$ Таким образом $u \in \R^{r}$, $x \in \R^{n}$.
 
 Как и в главе 2, будем считать \cite{JVM_2008}, что на промежутке $T$ модель $i$-го ($i \in I$) объекта имеет вид:
-\begin{equation}\label{equation_mainModel}
+\begin{equation}\label{equation_mainModel_dec}
 \dot x_i = A_i(t) x_i + \sum_{j \in I_i} A_{ij}(t)x_j + B_i(t) u_i +
 \sum_{j \in I_i} B_{ij}(t) u_j,\quad x_i(t_0) = x_{i,0}.
 \end{equation}
 
 Терминальное множество $S$ (общее для всех объектов):
-\begin{equation}\label{main_terminal_limits}
+\begin{equation}\label{main_terminal_limits_dec}
 x(t_f) \in S = \left\lbrace
 \begin{pmatrix}
 	x_1\\
@@ -29,20 +29,20 @@ x(t_f) \in S = \left\lbrace
 \end{equation}
 где $H_i \in \R^{m \times n_i}$, rank$(H_i) = m \le n_i, i \in I, g \in \R^m.$
 
-(\ref{main_terminal_limits}) можно записать в виде:
-\begin{equation}\label{main_terminal_limits_simplified}
+(\ref{main_terminal_limits_dec}) можно записать в виде:
+\begin{equation}\label{main_terminal_limits_simplified_dec}
 x(t_f) \in S = \left\lbrace x: H x = g\right\rbrace,
 \end{equation}
 где $H = (H_1, ..., H_q)$
 
 Линейный терминальный критерий качества:
-\begin{equation}\label{main_quolity}
+\begin{equation}\label{main_quolity_dec}
 \sum_{i \in I} c_i' x_i(t_f) \to \min_{u},
 \end{equation}
 где $c_i \in \R^{n_i}$ --- заданные векторы.
 
-(\ref{main_quolity}) можно записать в виде:
-\begin{equation}\label{main_quolity_simplified}
+(\ref{main_quolity_dec}) можно записать в виде:
+\begin{equation}\label{main_quolity_simplified_dec}
 c' x \to \min_{u},
 \end{equation}
 где
@@ -54,7 +54,7 @@ $c =
 \end{pmatrix}.$
 
 В итоге задача принимает вид:
-\begin{equation}\label{main_task}
+\begin{equation}\label{main_task_dec}
 \sum_{i \in I} c_i' x_i(t_f) \to \min_{u},
 \end{equation}
 \[
@@ -80,9 +80,9 @@ $c =
 
 Будем также считать, что при получении входных данных, регулятор строит управление мгновенно, то есть это время, время построения управления, в численных экспериментах учитываться не будет.
 
-Таким образом, пусть для всей группы перед началом процесса управления единым центром решается задача (\ref{main_task}), которая была собрана в предыдущем пункте.
+Таким образом, пусть для всей группы перед началом процесса управления единым центром решается задача (\ref{main_task_dec}), которая была собрана в предыдущем пункте.
 
-Программное решение $u_i^0(t),\ t \in T$ задачи (\ref{main_task}) может строиться так, как это было описано ранее в централизованном случае. После построения данное управление поступает на вход объектов управления на интервале $[t_0, \ t_0 + h)$. То есть реализация оптимальное обратной связи $u^*_i(t) = u_i^0(t_0) \equiv u_i^0(t_0| \ t_0, \ x_i^*(t_0))$.
+Программное решение $u_i^0(t),\ t \in T$ задачи (\ref{main_task_dec}) может строиться так, как это было описано ранее в централизованном случае. После построения данное управление поступает на вход объектов управления на интервале $[t_0, \ t_0 + h)$. То есть реализация оптимальное обратной связи $u^*_i(t) = u_i^0(t_0) \equiv u_i^0(t_0| \ t_0, \ x_i^*(t_0))$.
 
 Обозначим через $u_i^0(t \ | \ \tau, x(\tau)), \ t \in T, \ \tau \in T_h$ программное решение для позиции $(\tau, \ x(\tau))$. Также пусть $u_i^0(t \ | \ \tau, \ x_i(\tau), \ x(\tau - h)), \ t \in T, \ \tau \in T_h$ -- программное решение, построенное по априорной позиции, вычисленной по указанным точным значениям $x_i(\tau) \in R^{n_i}, \ x(\tau - h)\in R^{n}$.
 
@@ -130,7 +130,7 @@ u_i^*(t) =
 
 \begin{enumerate}
 
-\item Найти оптимальную программу $u^0(t), \ t \in T$, задачи (\ref{main_task}).
+\item Найти оптимальную программу $u^0(t), \ t \in T$, задачи (\ref{main_task_dec}).
 
 \item Измерить  $x_i^*(\tau + h)$ и вычислить $x_k^0(\tau + h), \ k\in I_i$.
 
@@ -162,4 +162,16 @@ u_i^0(\tau, x(\tau)) = u_i^0(\tau|\tau, \ x_i^*(\tau), \ x^*(\tau - h)),
 Основная трудоемкость реализации данного алгоритма приходится на шаг 5, на котором необходимо быстро (за время, не превосходящее $h$) решать задачу оптимального управления $P_i(\tau)$.
 
 \section{Решение задачи оптимального управления $P_i(\tau)$}\label{3_3}
-Перед решением задачи $P_i(\tau)$ необходимо вычислить начальные состаяния $x_j^0(\tau), \ j\in I_i$, так как эти состояния используются при определении данной задачи. Для вычисления этих начальных состаяний достаточно знать обратные связи  $$u_j^0(\tau, x(\tau)) := u^0_j(\tau|\tau-h, \ x_j^*(\tau - h), \ x^*(\tau - 2h)), \ j\in I_i$$ и состояние системы $x^*(\tau - h)$ предыдущего шага $\tau - h$.
+Перед решением задачи $P_i(\tau), \ \tau \in T_h$ необходимо вычислить начальные состаяния $x_j^0(\tau), \ j\in I_i$, так как эти состояния используются при определении данной задачи. Для вычисления этих начальных состаяний достаточно знать обратные связи  
+$$
+u_j^0(\tau - h, x(\tau - h)) := u^0_j(\tau - h|\tau-h, \ x_j^*(\tau - h), \ x^*(\tau - 2h)), \ j\in I, \ \tau \in T_h
+$$ 
+и состояние системы $x^*(\tau - h)$ предыдущего шага $\tau - h$. Зная обратные связи и состояния можно применить формулу Коши:
+\[
+x(t) = F(t - t_0)x_0 + \int\limits_{t_0}^t F(t - \theta)B(\theta)u(\theta)\,d\theta.
+\]
+
+Применим формулу Коши при $t_0 = \tau - h, \ t =  \tau$:
+\[
+x(\tau) = F(h)(\tau - h) + \int\limits_{\tau - h}^{\tau} F(\tau - \theta)B(\theta)\,d\theta\,u(\tau - h).
+\]
