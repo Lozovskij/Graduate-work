@@ -1,0 +1,433 @@
+\documentclass[notheorems]{beamer}
+\usepackage[cp1251]{inputenc}
+\usepackage{SlideStyle}
+
+
+\titlegraphic{\vspace*{-7cm}
+    \parbox[c]{3cm}{\includegraphics[height=.7cm]{bsulogo}}
+    \hspace*{1cm}%
+    \parbox[c]{2cm}{\includegraphics[height=1.5cm]{FPMIlogo}}
+    \hspace*{1cm}%
+    \parbox[c]{3cm}{\includegraphics[height=.7cm]{MOUlogo}}
+    \vspace*{3cm}
+}
+
+\title[Децентрализованное оптимальное управление]{\Large ДЕЦЕНТРАЛИЗОВАННОЕ ОПТИМАЛЬНОЕ УПРАВЛЕНИЕ}
+
+
+\author[И.И. Лозовский]{Иван И. Лозовский}
+
+
+\institute[ФПМИ, БГУ]{}
+
+
+\date[\copyright 2019-2020]{}%{\scriptsize \structure{2017-2018}}
+
+
+\begin{document}
+
+
+\maketitle
+
+
+%--------------------------------------------------------------------------------------
+\begin{frame}{Группа объектов управления}
+\begin{itemize}
+\item Группа из $q$ взаимосвязанных линейных нестационарных объектов
+\item \structure{Математическая модель $i$-го объекта}, $i \in I = \{1,\ 2,\ ...,\ q\}$
+$$
+\dot x_i = A_i(t) x_i + \sum_{j \in I_i} A_{ij}(t)x_j + B_i(t) u_i +
+\sum_{j \in I_i} B_{ij}(t) u_j,\quad x_i(t_0) = x_{i,0}
+$$
+	\begin{itemize}
+	\item$t \in T = [t_0,\ t_f]$
+	\item$x_i = x_i(t) \in \R^{n_i}, \ t \in T$ -- состояние $i$-й математической модели
+	\item$u_i = u_i(t) \in U_i = \{u \in \R^{r_i} : u_{i*} \leq u \leq u_i^* \}, \ t \in T$ -- управляющее воздействие $i$-й математической модели
+	%\item$A_i(t), t \in T$, $B_i(t), t \in T,$ --динамика и входное устройство $i$-й модели
+	\end{itemize}
+%\item $T_h = \{t_0,~ t_0 - h, \dots ,~ t_f - h\},\ h = \dfrac{t_f - t_0}{N},\ N \in \mathbb{N}$
+
+\item \structure{Дискретное управляющее воздействие} 
+$$u(t) \equiv u(\tau), ~~~t \in [\tau, ~\tau + h[,~~~ \tau \in T_h,$$
+{\small $$T_h = \{t_0,~ t_0 - h, \dots ,~ t_f - h\},\ h = \dfrac{t_f - t_0}{N},\ N \in \mathbb{N}$$}
+
+\end{itemize}
+\end{frame}
+%--------------------------------------------------------------------------------------
+\begin{frame}{Статические взаимосвязи. \\ Цели управления}
+\begin{itemize}
+	\item \structure {Терминальное множество $S$ } (общее для всех объектов)
+	$$x(t_f) \in S = \left\lbrace
+\begin{pmatrix}
+	x_1\\
+	\vdots\\
+	x_q\\
+\end{pmatrix} \in \R^n : \sum_{i \in I} H_i x_i =g\right\rbrace$$
+	\begin{itemize}
+	\item $n = \sum_{i \in I_i} n_i$ \bigskip
+	\item $H_i \in \R^{m \times n_i}$ \bigskip
+	\item rank$(H_i) = m \le n_i, i \in I$ \bigskip
+	\item $g \in \R^m$\bigskip
+	\end{itemize}
+	\item Минимизация \structure {линейного терминального} критерия качества
+ $$\sum_{i \in I} c_i' x_i(t_f) \to \min_{u}$$
+\end{itemize}
+\end{frame}
+
+%--------------------------------------------------------------------------------------
+\begin{frame}{Задача оптимального управления \\ группой}
+\begin{block}{}
+$$\sum_{i \in I} c_i' x_i(t_f) \to \min_{u}$$
+$$\dot x_i = A_i(t) x_i + \sum_{j \in I_i} A_{ij}(t)x_j + B_i(t) u_i +
+\sum_{j \in I_i} B_{ij}(t) u_j,\quad x_i(t_0) = x_{i,0}, \ i\in I$$
+$$\sum_{i \in I} H_i x_i(t_f) = g$$
+$$u_i(t) \in U_i, \quad t\in T, \quad i \in I$$
+\end{block}
+\end{frame}
+%--------------------------------------------------------------------------------------
+\begin{frame}{Централизованное и  \\ децентрализованное управление}
+\begin{columns}
+    \begin{column}{5.5cm} 
+	\begin{block}{Централизованное}
+	\begin{figure}[h!]
+  	\centering
+  	\includegraphics[width=1\textwidth]{CentrControlScheme.eps}\\
+	\end{figure}
+	\structure {центральный регулятор вычисляет значение управления для всех объектов группы}
+	\end{block}
+	\end{column}
+
+	\begin{column}{5.5cm} 
+	\begin{block}{Децентрализованное}
+	\begin{figure}[h!]
+  	\centering
+  	\includegraphics[width=1\textwidth]{DecControlScheme.eps}\\
+	\end{figure}
+	\structure {локальный регулятор строит локальное управление}
+	\end{block}
+	\end{column}
+\end{columns}
+\end{frame}%--------------------------------------------------------------------------------------
+\begin{frame}{Задача $P_i(\tau)$}
+\begin{columns}
+\begin{column}{10cm}
+\begin{block}{}
+\[
+\sum_{k \in I} c_k' x_k(t_f) \to \min_{u_i},
+\]
+\[
+\dot x_i = A_i(t) x_i + \sum_{j \in I_i} A_{ij}(t)x_j + B_i(t) u_i +
+f_i^0(t| \tau),
+\]
+\[
+x_i(\tau) = x_i^*(\tau),
+\]
+\[
+\dot x_k = A_k(t) x_k + \sum_{j \in I_k} A_{kj}(t)x_j + B_{ki}(t) u_i +
+f_{ki}^0(t| \tau),
+\]
+\[
+x_k(\tau) = x_k^0(\tau), \ k\in I_i,
+\]
+\[ \sum_{i \in I} H_i x_i(t_f) = g, \quad u_i(t) \in U_i, \quad t\in T(\tau), \quad i \in I\]
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+%--------------------------------------------------------------------------------------
+\begin{frame}{Алгоритм построения реализации \\ 
+децентрализованной обратной связи  
+$u_i^*(\tau)$, $\tau \in T_h$}
+\begin{itemize}
+\item Найти оптимальную программу $u^0(t), \ t \in T$, задачи (\ref{main_task_dec}).
+
+\item Измерить  $x_i^*(\tau + h)$ и вычислить $x_k^0(\tau + h), \ k\in I_i$.
+
+\item  Задать значение оптимальной обратной связи для позиции $(t_0,x^*(t_0))$:
+\[
+u^0(t_0, \ x^*(t_0)) = u^0(t_0),
+\]
+и подать на объект управления управляющее воздействие 
+\[
+    u_i^*(t) \equiv u_i^*(t_0) := u_i^0(t_0, \ x^*(t_0)), \  \ t\in [t_0, \  t_0+h).
+\]
+
+\item Положить $\tau = t_0 + h, \ x_k(\tau) = x_k^0(\tau), \ k\in I_i, \  x_i(\tau) = x_i^*(\tau)$.
+\end{itemize}
+\end{frame}
+\begin{frame}{Алгоритм построения реализации \\ 
+децентрализованной обратной связи  
+$u_i^*(\tau)$, $\tau \in T_h$}
+\begin{itemize}
+
+\item (ШАГ 5) Найти оптимальную программу $u_i^0(t|\tau, \ x_i^*(\tau), \ x^*(\tau - h)), \ t\in [\tau, \ t_f],$ задачи $P_i(\tau)$.
+
+\item  Задать значение оптимальной обратной связи для позиции $(\tau,x(\tau))$:
+\[
+u_i^0(\tau, x(\tau)) = u_i^0(\tau|\tau, \ x_i^*(\tau), \ x^*(\tau - h)),
+\]
+и подать на объект управления управляющее воздействие 
+\[
+    u_i^*(t) \equiv u_i^*(\tau) := u_i^0(\tau, x(\tau)), \ \ t\in [\tau, \ \tau+h).
+\]
+
+\item В момент $\tau + h$ измерить  $x_i^*(\tau + h)$ и вычислить  $x_k^0(\tau + h), \ k\in I_i$, положить $\tau:= \tau+ h$, при $\tau < t_f$ вернуться к шагу 5.
+\end{itemize}
+\end{frame}
+%--------------------------------------------------------------------------------------
+\begin{frame}{Функциональная форма $P_i(\tau)$}
+
+
+
+\begin{columns}
+\begin{column}{8cm}
+\begin{block}{}
+\[
+\sum_{s \in T_h(\tau)} c_{h \ i}'(s) u_i(s) \to \min_{u_i(s)},
+\]
+\[
+\sum_{s \in T_h(\tau)} D_{i}(s) u_i(s) = \tilde g(\tau) -\sum_{
+\substack{s \in T_h(\tau)\\ j \in I_i}}D_j(s) u_j^0(s) ,
+\]
+\[u_{* \ i} \le u_i(s) \le u_i^*, \ s \in T_h(\tau)\]
+\end{block}
+\end{column}
+\end{columns}\bigskip
+
+\begin{itemize}
+
+\item $T_h(\tau) = [\tau, t_f] \cap T_h, \ \tau \in T_h\backslash t_0$\bigskip
+
+\item $\tilde g = g - H F(t_f, \tau) \ x_0(\tau|x_i^*(\tau), \ P_i(\tau-h), \ i \in I)$
+	
+\end{itemize}
+
+\end{frame}%--------------------------------------------------------------------------------------
+\begin{frame}{Пример}
+\begin{itemize}
+
+\item Три взаимосвязанных системы
+\begin{align}
+\ddot{z_1} &= -2kz_1 + kz_2 + u_1 + w_1,\notag \\
+\ddot{z_2} &= -2kz_2 + kz_1 + kz_3 + u_2 + w_2,\notag\\ 
+\ddot{z_3} &= -2kz_3 + kz_2 + u_3 + w_3 \notag
+\end{align}
+	\begin{itemize}
+	\item $ |u_i(t)| \le L, \ i \in I = \{1, \ 2, \ 3\}$\bigskip
+	\item $ t\in [t_0,t_f]$
+	\end{itemize}
+
+\item Ограничения, задающие терминальное множество
+\[
+	|z_i(t_f)| \le d_1, \ |\dot{z_i}(t_f)| \le d_2, i \in I
+\]
+
+\item Критерий качества
+\[
+	\int\limits_{t_0}^{t_f} \sum_{i \in I} |u_i(t)|\,dt \to \min.
+\]
+
+\end{itemize}
+\end{frame}%--------------------------------------------------------------------------------------
+\begin{frame}{Параметры задачи и замена}
+\begin{itemize}
+
+\item Параметры задачи 
+\[
+	k = 10,\ L = 1,\ t_0 = 0,\ t_f = 4.5
+\] 
+\[
+	d_i = 0.1,\ \dot{z_i}(0) = 1,\ z_i(0) = 1,\ i \in I
+\]
+$$N = 100 => h = \dfrac{1}{N} = \dfrac{1}{100}$$ 
+\item Возмущения в конкретном процессе
+\[
+w(t) = 
+\begin{pmatrix}
+	0.7\,\sin 2t\\
+	0.1\,\cos t\\
+	-0.05\,\cos 3t\\
+\end{pmatrix}
+\]
+
+\item Замена переменных
+\begin{align}
+x_1 &= z_1, \qquad x_3 = z_2, \qquad x_5 = z_3, \notag \\
+x_2 &= \dot{z_1}, \qquad x_4 = \dot{z_2}, \qquad x_6 = \dot{z_3}.\notag
+\end{align}
+\end{itemize}
+\end{frame}%--------------------------------------------------------------------------------------
+\begin{frame}{Вид задачи после замены}
+ 
+\begin{columns}
+\begin{column}{6cm}
+\begin{block}{}
+$$\int\limits_{t_0}^{t_f} \sum_{i \in I} |u_i(t)|\,dt \to \min,$$
+
+\[
+	\dot{x}(t) = Ax(t) + Bu(t),
+\]
+\[
+	x(0) = x_0, \ t \in [t_0, t_f], \ Hx(t_f) \le g
+\]
+\end{block}
+\end{column}
+\begin{column}{4cm}
+\[
+H = \begin{pmatrix}
+	E_6 \\
+	-E_6\\
+	\end{pmatrix},
+\]\bigskip
+\[
+	g = 0.1 \cdot \mathbbm{1}_{12},
+\]
+\end{column}
+\end{columns}
+
+\[
+	A = \begin{pmatrix}
+	0 & 1 & 0 & 0 & 0 & 0 \\
+	-2k & 0 & k & 0 & 0 & 0 \\
+	0 & 0 & 0 & 1 & 0 & 0 \\
+	k & 0 & -2k & 0 & k & 0 \\
+	0 & 0 & 0 & 0 & 0 & 1 \\
+	0 & 0 & k & 0 & -2k & 0 \\
+	\end{pmatrix}, \ 	
+	B = \begin{pmatrix}
+	0 & 0 & 0 \\
+	1 & 0 & 0 \\
+	0 & 0 & 0 \\
+	0 & 1 & 0 \\
+	0 & 0 & 0 \\
+	0 & 0 & 1 \\
+	\end{pmatrix}, \ 	
+	x_0 = \begin{pmatrix}
+	1\\ 1\\ 1\\ 1\\ 1\\ 1\\
+	\end{pmatrix}
+\]
+
+\end{frame}%--------------------------------------------------------------------------------------
+\begin{frame}{Функциональная форма в примере}
+\begin{itemize}
+\item Замена
+$$u(s) = z(s) - v(s), s \in T_h$$
+\item Задача линейного программирования
+\begin{columns}
+\begin{column}{6cm}
+\begin{block}{}
+$$\sum_{s \in T_h} 
+	c'
+	\begin{pmatrix} z(s) \\ v(s) \\ \end{pmatrix} \to \min,$$
+$$\sum_{s \in T_h} 
+	(D_h(s), -D_h(s))
+	\begin{pmatrix} z(s) \\ v(s) \\ \end{pmatrix}  \le \tilde g$$
+	\[
+    -L \cdot \mathbbm{1}_{r} \le u(t) \le L \cdot \mathbbm{1}_{r},\  t\in [t_0,t_f]
+    \]
+\end{block}
+\end{column}
+\end{columns}
+\end{itemize}
+\end{frame}
+%--------------------------------------------------------------------------------------
+\begin{frame}{Функциональная форма в примере}
+\begin{columns}
+\begin{column}{6cm}
+\begin{block}{}
+$$\sum_{s \in T_h} 
+	c'
+	\begin{pmatrix} z(s) \\ v(s) \\ \end{pmatrix} \to \min,$$
+$$\sum_{s \in T_h} 
+	(D_h(s), -D_h(s))
+	\begin{pmatrix} z(s) \\ v(s) \\ \end{pmatrix}  \le \tilde g,$$
+$$c = \mathbbm{1}_{2r}$$
+\[
+    -L \cdot \mathbbm{1}_{r} \le u(t) \le L \cdot \mathbbm{1}_{r},\  t\in [t_0,t_f]
+    \]
+\end{block}
+\end{column}
+\begin{column}{6cm}
+
+	$\quad$Дополнительные переменные
+	\begin{itemize}
+	\item $n = 6$ -- число равенств замены
+	\item $q = 3$ -- число систем
+	\item $r = q$ -- число управлений
+	\item $m = 2n$ -- число ограничений на $x_i, \ i = 1...n$
+	\end{itemize} 
+
+\end{column}
+\end{columns}
+
+$$
+D_h(s) = \int\limits_{s}^{s+h} H F(t_f,\theta)B(\theta)\,d\theta,\  D_h(s) \in \R^{m \times r};
+$$
+
+$$
+\tilde g = g - H F(t_f, t_0)x_0 ,\  \tilde g \in  \R^{m}
+$$
+\end{frame}
+%--------------------------------------------------------------------------------------
+\begin{frame}{Результаты. Терминальные состояния}
+\begin{figure}[h!]
+    \centering
+    \scalebox{.4}{\includegraphics{x_dec}}
+    %\caption{Фазовые графики}
+\end{figure}
+
+$$ x^*(t_f) = 
+\begin{pmatrix} 
+    0.0706\\
+    0.0990\\
+   -0.0022\\
+    0.1201\\
+    0.0221\\
+    0.0498\\
+\end{pmatrix}, \quad x_d^*(t_f) = 
+\begin{pmatrix} 
+    0.0709\\
+    0.0990\\
+   -0.0035\\
+    0.1202\\
+    0.0209\\
+    0.0499\\
+\end{pmatrix}$$
+\end{frame}%--------------------------------------------------------------------------------------
+\begin{frame}{Сопутствующие результаты}
+\begin{itemize}
+
+\item Оптимальные управления
+\begin{figure}[h!]
+    \centering
+    \scalebox{.4}{\includegraphics{u_dec}}
+\end{figure}
+
+\item Значение критерия качества для централизованного решения: $163.4420$\bigskip
+
+\item Значение критерия качества для децентрализованного решения: $163.6147$
+
+%\item Среднее время выполнения функции $P(\tau)$ : $0.029$ секунды
+
+\end{itemize} 
+\end{frame}
+%--------------------------------------------------------------------------------------
+\begin{frame}{Заключение}
+\begin{itemize}
+\item Исследована задача децентрализованного управления группой взаимосвязанных систем в реальном времени\bigskip
+
+\item Предложен алгоритм работы децентрализованного оптимального регулятора\bigskip
+
+\item Построена функциональная форма задачи $P_i(\tau)$\bigskip
+
+\item Реализован алгоритм работы регуляторов децентрализованной задачи на основе алгоритма работы регулятора централизованного случая\bigskip
+
+\item Проведен анализ децентрализованного решения\bigskip
+\end{itemize}
+\end{frame}
+%--------------------------------------------------------------------------------------
+\begin{frame}
+	\centering \Huge\emph{Спасибо за внимание!}
+\end{frame}
+%--------------------------------------------------------------------------------------
+\end{document} 
